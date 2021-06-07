@@ -192,16 +192,18 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                     }
                 });
 
-                //检测是否登录
-                $(document).on("mousedown", "#faupload-addon", function (e) {
-                    var userinfo = Controller.api.userinfo.get();
-                    var uid = userinfo ? userinfo.id : 0;
+                if (Config.api_url) {
+                    //检测是否登录
+                    $(document).on("mousedown", "#faupload-addon", function (e) {
+                        var userinfo = Controller.api.userinfo.get();
+                        var uid = userinfo ? userinfo.id : 0;
 
-                    if (parseInt(uid) === 0) {
-                        $(".btn-userinfo").trigger("click");
-                        return false;
-                    }
-                });
+                        if (parseInt(uid) === 0) {
+                            $(".btn-userinfo").trigger("click");
+                            return false;
+                        }
+                    });
+                }
             });
 
             // 查看插件首页

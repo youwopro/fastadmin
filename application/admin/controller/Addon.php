@@ -215,17 +215,20 @@ class Addon extends Backend
         $info = [];
         $file = $this->request->file('file');
         try {
-            $uid = $this->request->post("uid");
-            $token = $this->request->post("token");
-            $faversion = $this->request->post("faversion");
-            if (!$uid || !$token) {
-                throw new Exception(__('Please login and try to install'));
+            $extend = [];
+            if (Config::get('api_url')) {
+                $uid = $this->request->post("uid");
+                $token = $this->request->post("token");
+                $faversion = $this->request->post("faversion");
+                if (!$uid || !$token) {
+                    throw new Exception(__('Please login and try to install'));
+                }
+                $extend = [
+                    'uid'       => $uid,
+                    'token'     => $token,
+                    'faversion' => $faversion
+                ];
             }
-            $extend = [
-                'uid'       => $uid,
-                'token'     => $token,
-                'faversion' => $faversion
-            ];
             $info = Service::local($file, $extend);
         } catch (AddonException $e) {
             $this->result($e->getData(), $e->getCode(), __($e->getMessage()));
