@@ -23,6 +23,22 @@ class Common
         // 设置mbstring字符编码
         mb_internal_encoding("UTF-8");
 
+        // 如果不存在站点配置文件
+        if (Config::get('site') == null) {
+            $siteConfigFile = CONF_PATH . 'extra' . DS . 'site.php';
+            $siteConfig = [];
+            $configList = \think\Db::name("config")->select();
+            foreach ($configList as $k => $value) {
+                if (in_array($value['type'], ['selects', 'checkbox', 'images', 'files'])) {
+                    $value['value'] = explode(',', $value['value']);
+                }
+                if ($value['type'] == 'array') {
+                    $value['value'] = (array)json_decode($value['value'], true);
+                }
+                $siteConfig[$value['name']] = $value['value'];
+            }
+            file_put_contents($siteConfigFile, '<?php' . "\n\nreturn " . var_export_short($siteConfig) . ";\n");
+        }
         // 如果修改了index.php入口地址，则需要手动修改cdnurl的值
         $url = preg_replace("/\/(\w+)\.php$/i", '', $request->root());
         // 如果未设置__CDN__则自动匹配得出

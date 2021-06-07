@@ -257,21 +257,22 @@ class Install extends Command
         //修改站点名称
         if ($siteName != config('site.name')) {
             $instance->name('config')->where('name', 'name')->update(['value' => $siteName]);
-            $siteConfigFile = CONF_PATH . 'extra' . DS . 'site.php';
-            $siteConfig = include $siteConfigFile;
-            $configList = $instance->name("config")->select();
-            foreach ($configList as $k => $value) {
-                if (in_array($value['type'], ['selects', 'checkbox', 'images', 'files'])) {
-                    $value['value'] = explode(',', $value['value']);
-                }
-                if ($value['type'] == 'array') {
-                    $value['value'] = (array)json_decode($value['value'], true);
-                }
-                $siteConfig[$value['name']] = $value['value'];
-            }
-            $siteConfig['name'] = $siteName;
-            file_put_contents($siteConfigFile, '<?php' . "\n\nreturn " . var_export_short($siteConfig) . ";\n");
         }
+
+        // 生成站点配置文件
+        $siteConfigFile = CONF_PATH . 'extra' . DS . 'site.php';
+        $siteConfig = [];
+        $configList = $instance->name("config")->select();
+        foreach ($configList as $k => $value) {
+            if (in_array($value['type'], ['selects', 'checkbox', 'images', 'files'])) {
+                $value['value'] = explode(',', $value['value']);
+            }
+            if ($value['type'] == 'array') {
+                $value['value'] = (array)json_decode($value['value'], true);
+            }
+            $siteConfig[$value['name']] = $value['value'];
+        }
+        file_put_contents($siteConfigFile, '<?php' . "\n\nreturn " . var_export_short($siteConfig) . ";\n");
 
         $installLockFile = INSTALL_PATH . "install.lock";
         //检测能否成功写入lock文件
