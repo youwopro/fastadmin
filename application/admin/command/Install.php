@@ -64,7 +64,7 @@ class Install extends Command
         }
 
         $adminUsername = 'admin';
-        $adminPassword = Random::alnum(10);
+        $adminPassword = Config::get('app_debug') ? '123456' : Random::alnum(10);
         $adminEmail = 'admin@admin.com';
         $siteName = __('My Website');
 
@@ -246,8 +246,12 @@ class Install extends Command
         // 修改后台入口
         $adminName = '';
         if (is_file($adminFile)) {
-            $adminName = Random::alpha(10) . '.php';
-            rename($adminFile, ROOT_PATH . 'public' . DS . $adminName);
+            if (Config::get('app_debug')) {
+                $adminName = 'admin.php';
+            } else {
+                $adminName = Random::alpha(10) . '.php';
+                rename($adminFile, ROOT_PATH . 'public' . DS . $adminName);
+            }
         }
 
         //修改站点名称
