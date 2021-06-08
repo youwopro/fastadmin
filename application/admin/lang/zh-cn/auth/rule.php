@@ -25,4 +25,5 @@ return [
     'Can not change the parent to child'                        => '父级不能是它的子级',
     'Can not change the parent to self'                         => '父级不能是它自己',
     'Name only supports letters, numbers, underscore and slash' => 'URL规则只能是小写字母、数字、下划线和/组成',
+    'Isdebug'                                                   => '调试模式显示',
 ];

@@ -168,6 +168,7 @@ CREATE TABLE `fa_auth_rule` (
   `ismenu` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否为菜单',
   `menutype` enum('addtabs','blank','dialog','ajax') DEFAULT NULL COMMENT '菜单类型',
   `extend` varchar(255) DEFAULT '' COMMENT '扩展属性',
+  `isdebug` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否只在调试模式显示',
   `createtime` int(10) DEFAULT NULL COMMENT '创建时间',
   `updatetime` int(10) DEFAULT NULL COMMENT '更新时间',
   `weigh` int(10) NOT NULL DEFAULT '0' COMMENT '权重',

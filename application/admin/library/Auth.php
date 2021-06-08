@@ -385,6 +385,7 @@ class Auth extends \fast\Auth
         $colorNums = count($colorArr);
         $badgeList = [];
         $module = request()->module();
+        $debug = Config::get('app_debug');
         // 生成菜单的badge
         foreach ($params as $k => $v) {
             $url = $k;
@@ -411,11 +412,21 @@ class Auth extends \fast\Auth
         // 必须将结果集转换为数组
         $ruleList = collection(\app\admin\model\AuthRule::where('status', 'normal')
             ->where('ismenu', 1)
+            ->where(function ($query) use ($debug) {
+                if ($debug == false) {
+                    $query->where('isdebug', 0);
+                }
+            })
             ->order('weigh', 'desc')
             ->cache("__menu__")
             ->select())->toArray();
         $indexRuleList = \app\admin\model\AuthRule::where('status', 'normal')
             ->where('ismenu', 0)
+            ->where(function ($query) use ($debug) {
+                if ($debug == false) {
+                    $query->where('isdebug', 0);
+                }
+            })
             ->where('name', 'like', '%/index')
             ->column('name,pid');
         $pidArr = array_filter(array_unique(array_map(function ($item) {
