@@ -182,11 +182,12 @@ class Menu
         } else {
             $pid = $parent;
         }
-        $allow = array_flip(['file', 'name', 'title', 'icon', 'condition', 'remark', 'ismenu', 'weigh']);
+        $allow = array_flip(['file', 'name', 'title', 'icon', 'condition', 'remark', 'ismenu', 'isdebug', 'weigh']);
         foreach ($newMenu as $k => $v) {
             $hasChild = isset($v['sublist']) && $v['sublist'] ? true : false;
             $data = array_intersect_key($v, $allow);
             $data['ismenu'] = isset($data['ismenu']) ? $data['ismenu'] : ($hasChild ? 1 : 0);
+            $data['isdebug'] = isset($data['isdebug']) ? $data['isdebug'] : 0;
             $data['icon'] = isset($data['icon']) ? $data['icon'] : ($hasChild ? 'fa fa-list' : 'fa fa-circle-o');
             $data['pid'] = $pid;
             $data['status'] = 'normal';
