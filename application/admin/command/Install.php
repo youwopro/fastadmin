@@ -10,6 +10,7 @@ use think\console\Input;
 use think\console\input\Option;
 use think\console\Output;
 use think\Db;
+use think\Env;
 use think\Exception;
 use think\Lang;
 use think\Request;
@@ -155,6 +156,9 @@ class Install extends Command
 
         if ($mysqlDatabase == '') {
             throw new Exception(__('Please input correct database'));
+        }
+        if (Env::get('database.database') !== null && Env::get('database.database') !== $mysqlDatabase) {
+            throw new Exception(__('The database name is inconsistent with the database name configured in the .env file'));
         }
         if (!preg_match("/^\w{3,12}$/", $adminUsername)) {
             throw new Exception(__('Please input correct username'));

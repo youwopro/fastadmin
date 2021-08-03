@@ -31,4 +31,5 @@ return [
     'The current permissions are insufficient to write the file %s'                                         => '当前权限不足，无法写入文件%s',
     'Please go to the official website to download the full package or resource package and try to install' => '当前代码仅包含核心代码，请前往官网下载完整包或资源包覆盖后再尝试安装',
     'The system has been installed. If you need to reinstall, please remove %s first'                       => '当前已经安装成功，如果需要重新安装，请手动移除%s文件',
+    'The database name is inconsistent with the database name configured in the .env file'                  => '数据库名与.env文件配置的数据库名不一致',
 ];
