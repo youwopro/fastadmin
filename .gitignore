@@ -4,7 +4,6 @@
 /runtime/*
 /addons/*
 /application/admin/command/Install/*.lock
-/application/extra/site.php
 /public/assets/libs/
 /public/assets/addons/*
 /public/uploads/*

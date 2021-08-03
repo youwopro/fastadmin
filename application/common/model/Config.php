@@ -2,6 +2,7 @@
 
 namespace app\common\model;
 
+use think\Cache;
 use think\Model;
 
 /**
@@ -212,10 +213,7 @@ class Config extends Model
             }
             $config[$value['name']] = $value['value'];
         }
-        file_put_contents(
-            CONF_PATH . 'extra' . DS . 'site.php',
-            '<?php' . "\n\nreturn " . var_export_short($config) . ";\n"
-        );
+        Cache::set('site_config', $config);
         return true;
     }
 

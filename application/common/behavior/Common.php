@@ -2,6 +2,7 @@
 
 namespace app\common\behavior;
 
+use think\Cache;
 use think\Config;
 use think\Lang;
 use think\Loader;
@@ -23,12 +24,10 @@ class Common
         // 设置mbstring字符编码
         mb_internal_encoding("UTF-8");
 
-        // 如果不存在站点配置文件
-        if (Config::get('site') == null) {
-            $siteConfigFile = CONF_PATH . 'extra' . DS . 'site.php';
-            $siteConfig = [];
+        // 加载系统配置
+        if (!$siteConfig = Cache::get('site_config')) {
             $configList = \think\Db::name("config")->select();
-            foreach ($configList as $k => $value) {
+            foreach ($configList as $value) {
                 if (in_array($value['type'], ['selects', 'checkbox', 'images', 'files'])) {
                     $value['value'] = explode(',', $value['value']);
                 }
@@ -37,8 +36,10 @@ class Common
                 }
                 $siteConfig[$value['name']] = $value['value'];
             }
-            file_put_contents($siteConfigFile, '<?php' . "\n\nreturn " . var_export_short($siteConfig) . ";\n");
+            Cache::set('site_config', $siteConfig);
         }
+        Config::set('site', $siteConfig);
+
         // 如果修改了index.php入口地址，则需要手动修改cdnurl的值
         $url = preg_replace("/\/(\w+)\.php$/i", '', $request->root());
         // 如果未设置__CDN__则自动匹配得出
