@@ -21,6 +21,16 @@ class Crud extends Command
     protected $internalKeywords = [
         'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'for', 'foreach', 'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while', 'xor'
     ];
+
+    /**
+     * 受保护的系统表, crud不会生效
+     */
+    protected $systemTables = [
+       'admin', 'admin_log', 'auth_group', 'auth_group_access', 'auth_rule', 
+       'attachment', 'config', 'category', 'ems', 'sms',
+       'user', 'user_group', 'user_rule', 'user_score_log', 'user_token',
+    ];
+
     /**
      * Selectpage搜索字段关联
      */
@@ -204,9 +214,12 @@ class Crud extends Command
         $force = $input->getOption('force');
         //是否为本地model,为0时表示为全局model将会把model放在app/common/model中
         $local = $input->getOption('local');
+        
         if (!$table) {
             throw new Exception('table name can\'t empty');
         }
+        
+    
         //是否生成菜单
         $menu = $input->getOption("menu");
         //关联表
@@ -297,6 +310,11 @@ class Crud extends Command
         $dbconnect = Db::connect($db);
         $dbname = Config::get($db . '.database');
         $prefix = Config::get($db . '.prefix');
+
+        //系统表无法生成，防止后台错乱
+        if(in_array(str_replace($prefix,"",$table),$this->systemTables)){
+            throw new Exception('system table can\'t be crud');
+        }
 
         //模块
         $moduleName = 'admin';
@@ -604,6 +622,11 @@ class Crud extends Command
                         $attrArr['data-rule'] = 'required';
                     }
 
+                    //如果字段类型为无符号型，则设置<input min=0>
+                    if (stripos($v['COLUMN_TYPE'], 'unsigned') !== false) {
+                        $attrArr['min'] = 0;
+                    }
+
                     if ($inputType == 'select') {
                         $cssClassArr[] = 'selectpicker';
                         $attrArr['class'] = implode(' ', $cssClassArr);
@@ -868,7 +891,7 @@ class Crud extends Command
                 'editList'                => $editList,
                 'javascriptList'          => $javascriptList,
                 'langList'                => $langList,
-                'sofeDeleteClassPath'     => in_array($this->deleteTimeField, $fieldArr) ? "use traits\model\SoftDelete;" : '',
+                'softDeleteClassPath'     => in_array($this->deleteTimeField, $fieldArr) ? "use traits\model\SoftDelete;" : '',
                 'softDelete'              => in_array($this->deleteTimeField, $fieldArr) ? "use SoftDelete;" : '',
                 'modelAutoWriteTimestamp' => in_array($this->createTimeField, $fieldArr) || in_array($this->updateTimeField, $fieldArr) ? "'int'" : 'false',
                 'createTime'              => in_array($this->createTimeField, $fieldArr) ? "'{$this->createTimeField}'" : 'false',
@@ -881,7 +904,7 @@ class Crud extends Command
                 'recyclebinJs'            => '',
                 'headingHtml'             => $headingHtml,
                 'recyclebinHtml'          => $recyclebinHtml,
-                'visibleFieldList'        => $fields ? "\$row->visible(['" . implode("','", array_filter(explode(',', $fields))) . "']);" : '',
+                'visibleFieldList'        => $fields ? "\$row->visible(['" . implode("','", array_filter(in_array($priKey,explode(',', $fields))?explode(',', $fields):explode(',',$priKey.','.$fields))) . "']);" : '',
                 'appendAttrList'          => implode(",\n", $appendAttrList),
                 'getEnumList'             => implode("\n\n", $getEnumArr),
                 'getAttrList'             => implode("\n\n", $getAttrArr),
@@ -957,7 +980,7 @@ class Crud extends Command
                 $this->writeToFile('recyclebin', $data, $recyclebinFile);
                 $recyclebinTitle = in_array('title', $fieldArr) ? 'title' : (in_array('name', $fieldArr) ? 'name' : '');
                 $recyclebinTitleJs = $recyclebinTitle ? "\n                        {field: '{$recyclebinTitle}', title: __('" . (ucfirst($recyclebinTitle)) . "'), align: 'left'}," : '';
-                $data['recyclebinJs'] = $this->getReplacedStub('mixins/recyclebinjs', ['recyclebinTitleJs' => $recyclebinTitleJs, 'controllerUrl' => $controllerUrl]);
+                $data['recyclebinJs'] = $this->getReplacedStub('mixins/recyclebinjs', ['deleteTimeField' => $this->deleteTimeField, 'recyclebinTitleJs' => $recyclebinTitleJs, 'controllerUrl' => $controllerUrl]);
             }
             // 生成JS文件
             $this->writeToFile('javascript', $data, $javascriptFile);
@@ -1453,9 +1476,9 @@ EOD;
 
         // 文件、图片、权重等字段默认不加入搜索栏，字符串类型默认LIKE
         $noSearchFiles = ['file$', 'files$', 'image$', 'images$', '^weigh$'];
-        if(preg_match("/" . implode('|', $noSearchFiles) . "/i", $field)){
+        if (preg_match("/" . implode('|', $noSearchFiles) . "/i", $field)) {
             $html .= ", operate: false";
-        }else if(in_array($datatype, ['varchar'])) {
+        } else if (in_array($datatype, ['varchar'])) {
             $html .= ", operate: 'LIKE'";
         }
 

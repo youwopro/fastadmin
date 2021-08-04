@@ -80,6 +80,7 @@ CREATE TABLE `fa_area` (
 DROP TABLE IF EXISTS `fa_attachment`;
 CREATE TABLE `fa_attachment` (
   `id` int(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `category` varchar(50) DEFAULT '' COMMENT '类别',
   `admin_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '管理员ID',
   `user_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '会员ID',
   `url` varchar(255) DEFAULT '' COMMENT '物理路径',
@@ -103,7 +104,7 @@ CREATE TABLE `fa_attachment` (
 -- Records of fa_attachment
 -- ----------------------------
 BEGIN;
-INSERT INTO `fa_attachment` VALUES (1, 1, 0, '/assets/img/qrcode.png', '150', '150', 'png', 0, 'qrcode.png', 21859, 'image/png', '', 1491635035, 1491635035, 1491635035, 'local', '17163603d0263e4838b9387ff2cd4877e8b018f6');
+INSERT INTO `fa_attachment` VALUES (1, '', 1, 0, '/assets/img/qrcode.png', '150', '150', 'png', 0, 'qrcode.png', 21859, 'image/png', '', 1491635035, 1491635035, 1491635035, 'local', '17163603d0263e4838b9387ff2cd4877e8b018f6');
 COMMIT;
 
 -- ----------------------------
@@ -169,6 +170,8 @@ CREATE TABLE `fa_auth_rule` (
   `menutype` enum('addtabs','blank','dialog','ajax') DEFAULT NULL COMMENT '菜单类型',
   `extend` varchar(255) DEFAULT '' COMMENT '扩展属性',
   `isdebug` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否只在调试模式显示',
+  `py` varchar(30) DEFAULT '' COMMENT '拼音首字母',
+  `pinyin` varchar(100) DEFAULT '' COMMENT '拼音',
   `createtime` int(10) DEFAULT NULL COMMENT '创建时间',
   `updatetime` int(10) DEFAULT NULL COMMENT '更新时间',
   `weigh` int(10) NOT NULL DEFAULT '0' COMMENT '权重',
@@ -183,88 +186,88 @@ CREATE TABLE `fa_auth_rule` (
 -- Records of fa_auth_rule
 -- ----------------------------
 BEGIN;
-INSERT INTO `fa_auth_rule` VALUES (1, 'file', 0, 'dashboard', 'Dashboard', 'fa fa-dashboard', '', '', 'Dashboard tips', 1, NULL, '', 0, 1491635035, 1491635035, 143, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (2, 'file', 0, 'general', 'General', 'fa fa-cogs', '', '', '', 1, NULL, '', 0, 1491635035, 1491635035, 137, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (3, 'file', 0, 'category', 'Category', 'fa fa-leaf', '', '', 'Category tips', 1, NULL, '', 0, 1491635035, 1491635035, 119, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (4, 'file', 0, 'addon', 'Addon', 'fa fa-rocket', '', '', 'Addon tips', 1, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (5, 'file', 0, 'auth', 'Auth', 'fa fa-group', '', '', '', 1, NULL, '', 0, 1491635035, 1491635035, 99, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (6, 'file', 2, 'general/config', 'Config', 'fa fa-cog', '', '', 'Config tips', 1, NULL, '', 0, 1491635035, 1491635035, 60, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (7, 'file', 2, 'general/attachment', 'Attachment', 'fa fa-file-image-o', '', '', 'Attachment tips', 1, NULL, '', 0, 1491635035, 1491635035, 53, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (8, 'file', 2, 'general/profile', 'Profile', 'fa fa-user', '', '', '', 1, NULL, '', 0, 1491635035, 1491635035, 34, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (9, 'file', 5, 'auth/admin', 'Admin', 'fa fa-user', '', '', 'Admin tips', 1, NULL, '', 0, 1491635035, 1491635035, 118, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (10, 'file', 5, 'auth/adminlog', 'Admin log', 'fa fa-list-alt', '', '', 'Admin log tips', 1, NULL, '', 0, 1491635035, 1491635035, 113, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (11, 'file', 5, 'auth/group', 'Group', 'fa fa-group', '', '', 'Group tips', 1, NULL, '', 0, 1491635035, 1491635035, 109, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (12, 'file', 5, 'auth/rule', 'Rule', 'fa fa-bars', '', '', 'Rule tips', 1, NULL, '', 0, 1491635035, 1491635035, 104, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (13, 'file', 1, 'dashboard/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 136, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (14, 'file', 1, 'dashboard/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 135, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (15, 'file', 1, 'dashboard/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 133, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (16, 'file', 1, 'dashboard/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 134, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (17, 'file', 1, 'dashboard/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 132, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (18, 'file', 6, 'general/config/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 52, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (19, 'file', 6, 'general/config/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 51, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (20, 'file', 6, 'general/config/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 50, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (21, 'file', 6, 'general/config/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 49, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (22, 'file', 6, 'general/config/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 48, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (23, 'file', 7, 'general/attachment/index', 'View', 'fa fa-circle-o', '', '', 'Attachment tips', 0, NULL, '', 0, 1491635035, 1491635035, 59, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (24, 'file', 7, 'general/attachment/select', 'Select attachment', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 58, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (25, 'file', 7, 'general/attachment/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 57, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (26, 'file', 7, 'general/attachment/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 56, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (27, 'file', 7, 'general/attachment/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 55, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (28, 'file', 7, 'general/attachment/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 54, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (29, 'file', 8, 'general/profile/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 33, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (30, 'file', 8, 'general/profile/update', 'Update profile', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 32, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (31, 'file', 8, 'general/profile/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 31, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (32, 'file', 8, 'general/profile/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 30, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (33, 'file', 8, 'general/profile/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 29, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (34, 'file', 8, 'general/profile/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 28, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (35, 'file', 3, 'category/index', 'View', 'fa fa-circle-o', '', '', 'Category tips', 0, NULL, '', 0, 1491635035, 1491635035, 142, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (36, 'file', 3, 'category/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 141, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (37, 'file', 3, 'category/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 140, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (38, 'file', 3, 'category/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 139, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (39, 'file', 3, 'category/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 138, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (40, 'file', 9, 'auth/admin/index', 'View', 'fa fa-circle-o', '', '', 'Admin tips', 0, NULL, '', 0, 1491635035, 1491635035, 117, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (41, 'file', 9, 'auth/admin/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 116, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (42, 'file', 9, 'auth/admin/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 115, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (43, 'file', 9, 'auth/admin/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 114, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (44, 'file', 10, 'auth/adminlog/index', 'View', 'fa fa-circle-o', '', '', 'Admin log tips', 0, NULL, '', 0, 1491635035, 1491635035, 112, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (45, 'file', 10, 'auth/adminlog/detail', 'Detail', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 111, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (46, 'file', 10, 'auth/adminlog/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 110, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (47, 'file', 11, 'auth/group/index', 'View', 'fa fa-circle-o', '', '', 'Group tips', 0, NULL, '', 0, 1491635035, 1491635035, 108, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (48, 'file', 11, 'auth/group/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 107, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (49, 'file', 11, 'auth/group/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 106, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (50, 'file', 11, 'auth/group/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 105, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (51, 'file', 12, 'auth/rule/index', 'View', 'fa fa-circle-o', '', '', 'Rule tips', 0, NULL, '', 0, 1491635035, 1491635035, 103, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (52, 'file', 12, 'auth/rule/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 102, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (53, 'file', 12, 'auth/rule/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 101, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (54, 'file', 12, 'auth/rule/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 100, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (55, 'file', 4, 'addon/index', 'View', 'fa fa-circle-o', '', '', 'Addon tips', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (56, 'file', 4, 'addon/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (57, 'file', 4, 'addon/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (58, 'file', 4, 'addon/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (59, 'file', 4, 'addon/downloaded', 'Local addon', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (60, 'file', 4, 'addon/state', 'Update state', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (63, 'file', 4, 'addon/config', 'Setting', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (64, 'file', 4, 'addon/refresh', 'Refresh', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (65, 'file', 4, 'addon/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (66, 'file', 0, 'user', 'User', 'fa fa-list', '', '', '', 1, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (67, 'file', 66, 'user/user', 'User', 'fa fa-user', '', '', '', 1, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (68, 'file', 67, 'user/user/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (69, 'file', 67, 'user/user/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (70, 'file', 67, 'user/user/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (71, 'file', 67, 'user/user/del', 'Del', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (72, 'file', 67, 'user/user/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (73, 'file', 66, 'user/group', 'User group', 'fa fa-users', '', '', '', 1, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (74, 'file', 73, 'user/group/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (75, 'file', 73, 'user/group/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (76, 'file', 73, 'user/group/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (77, 'file', 73, 'user/group/del', 'Del', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (78, 'file', 73, 'user/group/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (79, 'file', 66, 'user/rule', 'User rule', 'fa fa-circle-o', '', '', '', 1, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (80, 'file', 79, 'user/rule/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (81, 'file', 79, 'user/rule/del', 'Del', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (82, 'file', 79, 'user/rule/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (83, 'file', 79, 'user/rule/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
-INSERT INTO `fa_auth_rule` VALUES (84, 'file', 79, 'user/rule/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (1, 'file', 0, 'dashboard', 'Dashboard', 'fa fa-dashboard', '', '', 'Dashboard tips', 1, NULL, '', 0, 'kzt', 'kongzhitai', 1491635035, 1491635035, 143, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (2, 'file', 0, 'general', 'General', 'fa fa-cogs', '', '', '', 1, NULL, '', 0, 'cggl', 'changguiguanli', 1491635035, 1491635035, 137, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (3, 'file', 0, 'category', 'Category', 'fa fa-leaf', '', '', 'Category tips', 1, NULL, '', 0, 'flgl', 'fenleiguanli', 1491635035, 1491635035, 119, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (4, 'file', 0, 'addon', 'Addon', 'fa fa-rocket', '', '', 'Addon tips', 1, NULL, '', 0, 'cjgl', 'chajianguanli', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (5, 'file', 0, 'auth', 'Auth', 'fa fa-group', '', '', '', 1, NULL, '', 0, 'qxgl', 'quanxianguanli', 1491635035, 1491635035, 99, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (6, 'file', 2, 'general/config', 'Config', 'fa fa-cog', '', '', 'Config tips', 1, NULL, '', 0, 'xtpz', 'xitongpeizhi', 1491635035, 1491635035, 60, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (7, 'file', 2, 'general/attachment', 'Attachment', 'fa fa-file-image-o', '', '', 'Attachment tips', 1, NULL, '', 0, 'fjgl', 'fujianguanli', 1491635035, 1491635035, 53, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (8, 'file', 2, 'general/profile', 'Profile', 'fa fa-user', '', '', '', 1, NULL, '', 0, 'grzl', 'gerenziliao', 1491635035, 1491635035, 34, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (9, 'file', 5, 'auth/admin', 'Admin', 'fa fa-user', '', '', 'Admin tips', 1, NULL, '', 0, 'glygl', 'guanliyuanguanli', 1491635035, 1491635035, 118, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (10, 'file', 5, 'auth/adminlog', 'Admin log', 'fa fa-list-alt', '', '', 'Admin log tips', 1, NULL, '', 0, 'glyrz', 'guanliyuanrizhi', 1491635035, 1491635035, 113, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (11, 'file', 5, 'auth/group', 'Group', 'fa fa-group', '', '', 'Group tips', 1, NULL, '', 0, 'jsz', 'juesezu', 1491635035, 1491635035, 109, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (12, 'file', 5, 'auth/rule', 'Rule', 'fa fa-bars', '', '', 'Rule tips', 1, NULL, '', 0, 'cdgz', 'caidanguize', 1491635035, 1491635035, 104, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (13, 'file', 1, 'dashboard/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 136, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (14, 'file', 1, 'dashboard/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 135, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (15, 'file', 1, 'dashboard/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 133, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (16, 'file', 1, 'dashboard/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 134, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (17, 'file', 1, 'dashboard/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 132, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (18, 'file', 6, 'general/config/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 52, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (19, 'file', 6, 'general/config/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 51, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (20, 'file', 6, 'general/config/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 50, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (21, 'file', 6, 'general/config/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 49, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (22, 'file', 6, 'general/config/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 48, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (23, 'file', 7, 'general/attachment/index', 'View', 'fa fa-circle-o', '', '', 'Attachment tips', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 59, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (24, 'file', 7, 'general/attachment/select', 'Select attachment', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 58, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (25, 'file', 7, 'general/attachment/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 57, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (26, 'file', 7, 'general/attachment/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 56, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (27, 'file', 7, 'general/attachment/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 55, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (28, 'file', 7, 'general/attachment/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 54, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (29, 'file', 8, 'general/profile/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 33, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (30, 'file', 8, 'general/profile/update', 'Update profile', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 32, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (31, 'file', 8, 'general/profile/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 31, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (32, 'file', 8, 'general/profile/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 30, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (33, 'file', 8, 'general/profile/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 29, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (34, 'file', 8, 'general/profile/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 28, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (35, 'file', 3, 'category/index', 'View', 'fa fa-circle-o', '', '', 'Category tips', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 142, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (36, 'file', 3, 'category/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 141, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (37, 'file', 3, 'category/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 140, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (38, 'file', 3, 'category/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 139, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (39, 'file', 3, 'category/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 138, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (40, 'file', 9, 'auth/admin/index', 'View', 'fa fa-circle-o', '', '', 'Admin tips', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 117, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (41, 'file', 9, 'auth/admin/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 116, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (42, 'file', 9, 'auth/admin/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 115, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (43, 'file', 9, 'auth/admin/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 114, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (44, 'file', 10, 'auth/adminlog/index', 'View', 'fa fa-circle-o', '', '', 'Admin log tips', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 112, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (45, 'file', 10, 'auth/adminlog/detail', 'Detail', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 111, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (46, 'file', 10, 'auth/adminlog/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 110, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (47, 'file', 11, 'auth/group/index', 'View', 'fa fa-circle-o', '', '', 'Group tips', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 108, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (48, 'file', 11, 'auth/group/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 107, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (49, 'file', 11, 'auth/group/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 106, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (50, 'file', 11, 'auth/group/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 105, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (51, 'file', 12, 'auth/rule/index', 'View', 'fa fa-circle-o', '', '', 'Rule tips', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 103, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (52, 'file', 12, 'auth/rule/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 102, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (53, 'file', 12, 'auth/rule/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 101, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (54, 'file', 12, 'auth/rule/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 100, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (55, 'file', 4, 'addon/index', 'View', 'fa fa-circle-o', '', '', 'Addon tips', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (56, 'file', 4, 'addon/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (57, 'file', 4, 'addon/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (58, 'file', 4, 'addon/del', 'Delete', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (59, 'file', 4, 'addon/downloaded', 'Local addon', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (60, 'file', 4, 'addon/state', 'Update state', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (63, 'file', 4, 'addon/config', 'Setting', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (64, 'file', 4, 'addon/refresh', 'Refresh', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (65, 'file', 4, 'addon/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (66, 'file', 0, 'user', 'User', 'fa fa-user-circle', '', '', '', 1, NULL, '', 0, 'hygl', 'huiyuanguanli', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (67, 'file', 66, 'user/user', 'User', 'fa fa-user', '', '', '', 1, NULL, '', 0, 'hygl', 'huiyuanguanli', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (68, 'file', 67, 'user/user/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (69, 'file', 67, 'user/user/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (70, 'file', 67, 'user/user/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (71, 'file', 67, 'user/user/del', 'Del', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (72, 'file', 67, 'user/user/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (73, 'file', 66, 'user/group', 'User group', 'fa fa-users', '', '', '', 1, NULL, '', 0, 'hyfz', 'huiyuanfenzu', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (74, 'file', 73, 'user/group/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (75, 'file', 73, 'user/group/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (76, 'file', 73, 'user/group/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (77, 'file', 73, 'user/group/del', 'Del', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (78, 'file', 73, 'user/group/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (79, 'file', 66, 'user/rule', 'User rule', 'fa fa-circle-o', '', '', '', 1, NULL, '', 0, 'hygz', 'huiyuanguize', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (80, 'file', 79, 'user/rule/index', 'View', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (81, 'file', 79, 'user/rule/del', 'Del', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (82, 'file', 79, 'user/rule/add', 'Add', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (83, 'file', 79, 'user/rule/edit', 'Edit', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
+INSERT INTO `fa_auth_rule` VALUES (84, 'file', 79, 'user/rule/multi', 'Multi', 'fa fa-circle-o', '', '', '', 0, NULL, '', 0, '', '', 1491635035, 1491635035, 0, 'normal');
 COMMIT;
 
 -- ----------------------------
@@ -351,6 +354,7 @@ INSERT INTO `fa_config` VALUES (14, 'mail_smtp_user', 'email', 'Mail smtp user',
 INSERT INTO `fa_config` VALUES (15, 'mail_smtp_pass', 'email', 'Mail smtp password', '（填写您的密码或授权码）', 'string', 'password', '', '', '', '');
 INSERT INTO `fa_config` VALUES (16, 'mail_verify_type', 'email', 'Mail vertify type', '（SMTP验证方式[推荐SSL]）', 'select', '2', '[\"无\",\"TLS\",\"SSL\"]', '', '', '');
 INSERT INTO `fa_config` VALUES (17, 'mail_from', 'email', 'Mail from', '', 'string', '10000@qq.com', '', '', '', '');
+INSERT INTO `fa_config` VALUES (18, 'attachmentcategory', 'dictionary', 'Attachment category', '', 'array', '{\"category1\":\"Category1\",\"category2\":\"Category2\",\"custom\":\"Custom\"}', '', '', '', '');
 COMMIT;
 
 -- ----------------------------
@@ -389,24 +393,24 @@ CREATE TABLE `fa_sms` (
 DROP TABLE IF EXISTS `fa_test`;
 CREATE TABLE `fa_test` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `admin_id` int(10) NOT NULL DEFAULT '0' COMMENT '管理员ID',
-  `category_id` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '分类ID(单选)',
-  `category_ids` varchar(100) NOT NULL COMMENT '分类ID(多选)',
-  `week` enum('monday','tuesday','wednesday') NOT NULL COMMENT '星期(单选):monday=星期一,tuesday=星期二,wednesday=星期三',
+  `admin_id` int(10) DEFAULT '0' COMMENT '管理员ID',
+  `category_id` int(10) unsigned DEFAULT '0' COMMENT '分类ID(单选)',
+  `category_ids` varchar(100) COMMENT '分类ID(多选)',
+  `week` enum('monday','tuesday','wednesday') COMMENT '星期(单选):monday=星期一,tuesday=星期二,wednesday=星期三',
   `flag` set('hot','index','recommend') DEFAULT '' COMMENT '标志(多选):hot=热门,index=首页,recommend=推荐',
-  `genderdata` enum('male','female') NOT NULL DEFAULT 'male' COMMENT '性别(单选):male=男,female=女',
-  `hobbydata` set('music','reading','swimming') NOT NULL COMMENT '爱好(多选):music=音乐,reading=读书,swimming=游泳',
-  `title` varchar(50) DEFAULT '' COMMENT '标题',
-  `content` text NOT NULL COMMENT '内容',
+  `genderdata` enum('male','female') DEFAULT 'male' COMMENT '性别(单选):male=男,female=女',
+  `hobbydata` set('music','reading','swimming') COMMENT '爱好(多选):music=音乐,reading=读书,swimming=游泳',
+  `title` varchar(100) DEFAULT '' COMMENT '标题',
+  `content` text COMMENT '内容',
   `image` varchar(100) DEFAULT '' COMMENT '图片',
   `images` varchar(1500) DEFAULT '' COMMENT '图片组',
   `attachfile` varchar(100) DEFAULT '' COMMENT '附件',
-  `keywords` varchar(100) DEFAULT '' COMMENT '关键字',
+  `keywords` varchar(255) DEFAULT '' COMMENT '关键字',
   `description` varchar(255) DEFAULT '' COMMENT '描述',
   `city` varchar(100) DEFAULT '' COMMENT '省市',
   `json` varchar(255) DEFAULT NULL COMMENT '配置:key=名称,value=值',
-  `price` float(10,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '价格',
-  `views` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '点击',
+  `price` decimal(10,2) unsigned DEFAULT '0.00' COMMENT '价格',
+  `views` int(10) unsigned DEFAULT '0' COMMENT '点击',
   `startdate` date DEFAULT NULL COMMENT '开始日期',
   `activitytime` datetime DEFAULT NULL COMMENT '活动时间(datetime)',
   `year` year(4) DEFAULT NULL COMMENT '年',
@@ -415,10 +419,10 @@ CREATE TABLE `fa_test` (
   `createtime` int(10) DEFAULT NULL COMMENT '创建时间',
   `updatetime` int(10) DEFAULT NULL COMMENT '更新时间',
   `deletetime` int(10) DEFAULT NULL COMMENT '删除时间',
-  `weigh` int(10) NOT NULL DEFAULT '0' COMMENT '权重',
-  `switch` tinyint(1) NOT NULL DEFAULT '0' COMMENT '开关',
-  `status` enum('normal','hidden') NOT NULL DEFAULT 'normal' COMMENT '状态',
-  `state` enum('0','1','2') NOT NULL DEFAULT '1' COMMENT '状态值:0=禁用,1=正常,2=推荐',
+  `weigh` int(10) DEFAULT '0' COMMENT '权重',
+  `switch` tinyint(1) DEFAULT '0' COMMENT '开关',
+  `status` enum('normal','hidden') DEFAULT 'normal' COMMENT '状态',
+  `state` enum('0','1','2') DEFAULT '1' COMMENT '状态值:0=禁用,1=正常,2=推荐',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci COMMENT='测试表';
 

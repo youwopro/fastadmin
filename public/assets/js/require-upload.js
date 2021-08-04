@@ -251,10 +251,12 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                                 Upload.events.onUploadError(this, ret, file);
                             },
                             uploadprogress: function (file, progress, bytesSent) {
-
+                                if (file.upload.chunked) {
+                                    $(this.element).prop("disabled", true).html("<i class='fa fa-upload'></i> " + __('Upload') + Math.floor((file.upload.bytesSent / file.size) * 100) + "%");
+                                }
                             },
                             totaluploadprogress: function (progress, bytesSent) {
-                                if (this.getActiveFiles().length > 0) {
+                                if (this.getActiveFiles().length > 0 && !this.options.chunking) {
                                     $(this.element).prop("disabled", true).html("<i class='fa fa-upload'></i> " + __('Upload') + Math.floor(progress) + "%");
                                 }
                             },
@@ -269,13 +271,13 @@ define(['jquery', 'bootstrap', 'dropzone', 'template'], function ($, undefined, 
                                 var that = this;
                                 Fast.api.ajax({
                                     url: this.options.url,
-                                    data: {
+                                    data: $.extend({}, multipart, {
                                         action: 'merge',
                                         filesize: file.size,
                                         filename: file.name,
                                         chunkid: file.upload.uuid,
                                         chunkcount: file.upload.totalChunkCount,
-                                    }
+                                    })
                                 }, function (data, ret) {
                                     done(JSON.stringify(ret));
                                     return false;
