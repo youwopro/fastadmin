@@ -230,9 +230,9 @@ class User extends Frontend
             $renewpassword = $this->request->post("renewpassword");
             $token = $this->request->post('__token__');
             $rule = [
-                'oldpassword'   => 'require|length:6,30',
-                'newpassword'   => 'require|length:6,30',
-                'renewpassword' => 'require|length:6,30|confirm:newpassword',
+                'oldpassword'   => 'require|regex:\S{6,30}',
+                'newpassword'   => 'require|regex:\S{6,30}',
+                'renewpassword' => 'require|regex:\S{6,30}|confirm:newpassword',
                 '__token__'     => 'token',
             ];
 
@@ -277,16 +277,12 @@ class User extends Frontend
             $where = [];
             $filter = $this->request->request('filter');
             $filterArr = (array)json_decode($filter, true);
-            if (isset($filterArr['mimetype']) && preg_match("/[]\,|\*]/", $filterArr['mimetype'])) {
+            if (isset($filterArr['mimetype']) && preg_match("/(\/|\,|\*)/", $filterArr['mimetype'])) {
                 $this->request->get(['filter' => json_encode(array_diff_key($filterArr, ['mimetype' => '']))]);
                 $mimetypeQuery = function ($query) use ($filterArr) {
-                    $mimetypeArr = explode(',', $filterArr['mimetype']);
+                    $mimetypeArr = array_filter(explode(',', $filterArr['mimetype']));
                     foreach ($mimetypeArr as $index => $item) {
-                        if (stripos($item, "/*") !== false) {
-                            $query->whereOr('mimetype', 'like', str_replace("/*", "/", $item) . '%');
-                        } else {
-                            $query->whereOr('mimetype', 'like', '%' . $item . '%');
-                        }
+                        $query->whereOr('mimetype', 'like', '%' . str_replace("/*", "/", $item) . '%');
                     }
                 };
             } elseif (isset($filterArr['mimetype'])) {
@@ -300,6 +296,10 @@ class User extends Frontend
             if (isset($filterArr['createtime'])) {
                 $timeArr = explode(' - ', $filterArr['createtime']);
                 $where['createtime'] = ['between', [strtotime($timeArr[0]), strtotime($timeArr[1])]];
+            }
+            $search = $this->request->get('search');
+            if ($search) {
+                $where['filename'] = ['like', '%' . $search . '%'];
             }
 
             $model = new Attachment();
@@ -328,6 +328,9 @@ class User extends Frontend
 
             return json($result);
         }
+        $mimetype = $this->request->get('mimetype', '');
+        $mimetype = substr($mimetype, -1) === '/' ? $mimetype . '*' : $mimetype;
+        $this->view->assign('mimetype', $mimetype);
         $this->view->assign("mimetypeList", \app\common\model\Attachment::getMimetypeList());
         return $this->view->fetch();
     }

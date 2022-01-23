@@ -460,8 +460,9 @@ class Auth extends \fast\Auth
             $referer = [];
         }
 
-        $select_id = $selected ? $selected['id'] : 0;
+        $select_id = $referer ? $referer['id'] : ($selected ? $selected['id'] : 0);
         $menu = $nav = '';
+        $showSubmenu = config('fastadmin.show_submenu');
         if (Config::get('fastadmin.multiplenav')) {
             $topList = [];
             foreach ($ruleList as $index => $item) {
@@ -482,7 +483,7 @@ class Auth extends \fast\Auth
                     $select_id,
                     '',
                     'ul',
-                    'class="treeview-menu"'
+                    'class="treeview-menu' . ($showSubmenu ? ' menu-open' : '') . '"'
                 );
                 $current = in_array($item['id'], $selectParentIds);
                 $url = $childList ? 'javascript:;' : $item['url'];
@@ -504,7 +505,7 @@ class Auth extends \fast\Auth
                 $select_id,
                 '',
                 'ul',
-                'class="treeview-menu"'
+                'class="treeview-menu' . ($showSubmenu ? ' menu-open' : '') . '"'
             );
             if ($selected) {
                 $nav .= '<li role="presentation" id="tab_' . $selected['id'] . '" class="' . ($referer ? '' : 'active') . '"><a href="#con_' . $selected['id'] . '" node-id="' . $selected['id'] . '" aria-controls="' . $selected['id'] . '" role="tab" data-toggle="tab"><i class="' . $selected['icon'] . ' fa-fw"></i> <span>' . $selected['title'] . '</span> </a></li>';

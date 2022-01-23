@@ -69,6 +69,10 @@ class Config extends Backend
                 $value['value'] = json_encode($dictValue, JSON_UNESCAPED_UNICODE);
             }
             $value['tip'] = htmlspecialchars($value['tip']);
+            if ($value['name'] == 'cdnurl') {
+                //cdnurl不支持在线修改
+                continue;
+            }
             $siteList[$v['group']]['list'][] = $value;
         }
         $index = 0;
@@ -88,6 +92,9 @@ class Config extends Backend
      */
     public function add()
     {
+        if (!config('app_debug')) {
+            $this->error(__('Only work at development environment'));
+        }
         if ($this->request->isPost()) {
             $this->token();
             $params = $this->request->post("row/a", [], 'trim');
@@ -166,6 +173,9 @@ class Config extends Backend
      */
     public function del($ids = "")
     {
+        if (!config('app_debug')) {
+            $this->error(__('Only work at development environment'));
+        }
         $name = $this->request->post('name');
         $config = ConfigModel::getByName($name);
         if ($name && $config) {
