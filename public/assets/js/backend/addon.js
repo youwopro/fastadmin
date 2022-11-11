@@ -35,7 +35,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 }
             };
             table.on('load-success.bs.table', function (e, json) {
-                if (json && typeof json.category != 'undefined' && $(".nav-category li").size() == 2) {
+                if (json && typeof json.category != 'undefined' && $(".nav-category li").length == 2) {
                     $.each(json.category, function (i, j) {
                         $("<li><a href='javascript:;' data-id='" + j.id + "'>" + j.name + "</a></li>").insertBefore($(".nav-category li:last"));
                     });
@@ -68,13 +68,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 });
             });
 
-            //当表格分页变更时
-            table.on('page-change.bs.table', function (e, page, pagesize) {
-                if (!isNaN(pagesize)) {
-                    localStorage.setItem("pagesize-addon", pagesize);
-                }
-            });
-
             Template.helper("Moment", Moment);
             Template.helper("addons", Config['addons']);
 
@@ -90,6 +83,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
+                pageSize: 50,
                 queryParams: function (params) {
                     var userinfo = Controller.api.userinfo.get();
                     $.extend(params, {
@@ -181,7 +175,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
                 commonSearch: true,
                 searchFormVisible: true,
                 searchFormTemplate: 'searchformtpl',
-                pageSize: localStorage.getItem('pagesize-addon') || 50,
             });
 
             // 为表格绑定事件
@@ -247,7 +240,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'template'], function
             $(document).on("click", ".btn-addonindex", function () {
                 if ($(this).attr("href") == 'javascript:;') {
                     Layer.msg(__('Not installed tips'), {icon: 7});
-                } else if ($(this).closest(".operate").find("a.btn-enable").size() > 0) {
+                } else if ($(this).closest(".operate").find("a.btn-enable").length > 0) {
                     Layer.msg(__('Not enabled tips'), {icon: 7});
                     return false;
                 }

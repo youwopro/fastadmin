@@ -47,6 +47,8 @@ return [
     'default_filter'         => '',
     // 默认语言
     'default_lang'           => 'zh-cn',
+    // 允许的语言列表
+    'allow_lang_list'        => ['zh-cn', 'en'],
     // 应用类库后缀
     'class_suffix'           => false,
     // 控制器类后缀
@@ -294,7 +296,7 @@ return [
         //允许跨域的域名,多个以,分隔
         'cors_request_domain'   => 'localhost,127.0.0.1',
         //版本号
-        'version'               => '1.3.3.20220121',
+        'version'               => '1.3.4.20220530',
         //API接口地址
         'api_url'               => 'https://api.fastadmin.net',
     ],

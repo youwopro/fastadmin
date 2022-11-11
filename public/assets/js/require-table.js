@@ -26,7 +26,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 },
                 ignoreColumn: [0, 'operate'] //默认不导出第一列(checkbox)与操作(operate)列
             },
-            pageSize: localStorage.getItem("pagesize") || 10,
+            pageSize: Config.pagesize || localStorage.getItem("pagesize") || 10,
             pageList: [10, 15, 20, 25, 50, 'All'],
             pagination: true,
             clickToSelect: true, //是否启用点击选中
@@ -114,6 +114,12 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 $.fn.bootstrapTable.Constructor.prototype.getSelectItem = function () {
                     return this.$selectItem;
                 };
+                var _onPageListChange = $.fn.bootstrapTable.Constructor.prototype.onPageListChange;
+                $.fn.bootstrapTable.Constructor.prototype.onPageListChange = function () {
+                    _onPageListChange.apply(this, Array.prototype.slice.apply(arguments));
+                    localStorage.setItem('pagesize', this.options.pageSize);
+                    return false;
+                };
                 // 写入bootstrap-table默认配置
                 $.extend(true, $.fn.bootstrapTable.defaults, Table.defaults, defaults);
                 // 写入bootstrap-table column配置
@@ -158,7 +164,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 var toolbar = $(options.toolbar, parenttable);
                 //跨页提示按钮
                 var tipsBtn = $(".btn-selected-tips", parenttable);
-                if (tipsBtn.size() === 0) {
+                if (tipsBtn.length === 0) {
                     tipsBtn = $('<a href="javascript:" class="btn btn-warning-light btn-selected-tips hide" data-animation="false" data-toggle="tooltip" data-title="' + __("Click to uncheck all") + '"><i class="fa fa-info-circle"></i> ' + __("Multiple selection mode: %s checked", "<b>0</b>") + '</a>').appendTo(toolbar);
                 }
                 //点击提示按钮
@@ -190,12 +196,6 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 table.on('refresh.bs.table', function (e, settings, data) {
                     $(Table.config.refreshbtn, toolbar).find(".fa").addClass("fa-spin");
                 });
-                //当表格分页变更时
-                table.on('page-change.bs.table', function (e, page, pagesize) {
-                    if (!isNaN(pagesize)) {
-                        localStorage.setItem("pagesize", pagesize);
-                    }
-                });
                 //当执行搜索时
                 table.on('search.bs.table common-search.bs.table', function (e, settings, data) {
                     table.trigger("uncheckbox");
@@ -217,7 +217,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                 //当内容渲染完成后
                 table.on('post-body.bs.table', function (e, data) {
                     $(Table.config.refreshbtn, toolbar).find(".fa").removeClass("fa-spin");
-                    if ($(Table.config.checkboxtd + ":first", table).find("input[type='checkbox'][data-index]").size() > 0) {
+                    if ($(Table.config.checkboxtd + ":first", table).find("input[type='checkbox'][data-index]").length > 0) {
                         // 拖拽选择,需要重新绑定事件
                         require(['drag', 'drop'], function () {
                             var checkboxtd = $(Table.config.checkboxtd, table);
@@ -320,7 +320,7 @@ define(['jquery', 'bootstrap', 'moment', 'moment/locale/zh-cn', 'bootstrap-table
                     Fast.api.open(url, $(this).data("original-title") || $(this).attr("title") || __('Add'), $(this).data() || {});
                 });
                 // 导入按钮事件
-                if ($(Table.config.importbtn, toolbar).size() > 0) {
+                if ($(Table.config.importbtn, toolbar).length > 0) {
                     require(['upload'], function (Upload) {
                         Upload.api.upload($(Table.config.importbtn, toolbar), function (data, ret) {
                             Fast.api.ajax({
