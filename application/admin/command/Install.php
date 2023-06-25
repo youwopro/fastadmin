@@ -169,9 +169,11 @@ class Install extends Command
         if (!preg_match("/^[\S]{6,16}$/", $adminPassword)) {
             throw new Exception(__('Please input correct password'));
         }
-        $weakPasswordArr = ['123456', '12345678', '123456789', '654321', '111111', '000000', 'password', 'qwerty', 'abc123', '1qaz2wsx'];
-        if (in_array($adminPassword, $weakPasswordArr)) {
-            throw new Exception(__('Password is too weak'));
+        if (!Config::get('app_debug')) {
+            $weakPasswordArr = ['123456', '12345678', '123456789', '654321', '111111', '000000', 'password', 'qwerty', 'abc123', '1qaz2wsx'];
+            if (in_array($adminPassword, $weakPasswordArr)) {
+                throw new Exception(__('Password is too weak'));
+            }
         }
         if ($siteName == '' || preg_match("/fast" . "admin/i", $siteName)) {
             throw new Exception(__('Please input correct website'));
@@ -278,11 +280,13 @@ class Install extends Command
             throw new Exception(__('The current permissions are insufficient to write the file %s', 'application/admin/command/Install/install.lock'));
         }
 
-        try {
-            //删除安装脚本
-            @unlink(ROOT_PATH . 'public' . DS . 'install.php');
-        } catch (\Exception $e) {
+        if (!Config::get('app_debug')) {
+            try {
+                //删除安装脚本
+                @unlink(ROOT_PATH . 'public' . DS . 'install.php');
+            } catch (\Exception $e) {
 
+            }
         }
 
         return $adminName;
